@@ -1,0 +1,151 @@
+﻿@using PersonalPage.Data
+@using PersonalPage.Services.Tetris
+@using PersonalPage.Models.Tetris.Demo2
+@using PersonalPage.Services.Tetris.Demo1
+
+
+@inject IJSRuntime _jsRuntime
+@inject GameService _service
+
+<h3>Tetris game development - demo 2</h3>
+
+<div class="container">
+
+    <div class="mt-2">
+        <p>Current shape: @CurrentShape.Type.ToString()</p>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col text-center">
+            <button type="button" class="btn btn-danger" @onclick="GenerateNewShape">Generate new shape</button>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-evenly align-items-center mt-5">
+
+        <div class="board">
+
+            @for (int row = 0; row < _service.GameBoard.Height; row++)
+            {
+                for (int col = 0; col < _service.GameBoard.Width; col++)
+                {
+                    //reassignement to captured local variable is required
+                    int _row = row;
+                    int _col = col;
+
+                    bool isOccupied = false;
+
+                    //shape has a grid of 3x3 pixels, Shape only has a CurrentStartCol and CurrentStartRow indexes, so we need to check
+                    //the remaining rows and grids
+                    for (int shapeRow = 0; shapeRow < CurrentShape.Height; shapeRow++)
+                    {
+                        for (int shapeCol = 0; shapeCol < CurrentShape.Width; shapeCol++)
+                        {
+                            if (CurrentShape!.CurrentStartRow + shapeRow == _row)
+                            {
+                                if (CurrentShape!.CurrentStartCol + shapeCol == _col && CurrentShape.Grid[shapeRow, shapeCol].IsOccupied)
+                                {
+                                    isOccupied = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    <div class="pixel @(isOccupied ? CurrentShape.ColorClass : string.Empty)"
+                         data-row="@row"
+                         data-col="@col">
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h4>Code</h4>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <h5>Rendering the game board grid inside TetrisDemo2.razor component</h5>
+            <pre>
+            <code>
+                @CodeSnippets.RenderGridDemo2()
+            </code>
+        </pre>
+            <ul>
+                <li>We added another two loops to check for the occupied pixel of Shape's grid'</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <h5>Component Code section</h5>
+            <pre>
+            <code>
+                @CodeSnippets.CodeSectionDemo2()
+            </code>
+        </pre>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <h5>Shape.cs class representing a generic tetris shape known as Tetromino</h5>
+            <pre>
+            <code>
+                @CodeSnippets.ShapeClassDemo2()
+            </code>
+        </pre>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <h5>TetrisHelper.cs class with a static method to generate random shape</h5>
+            <pre>
+            <code>
+                @CodeSnippets.TetrisHelperClassDemo2()
+            </code>
+        </pre>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+@code
+{
+
+    private IJSObjectReference? jsModule;
+
+
+    private Shape? CurrentShape;
+
+    protected override void OnInitialized()
+    {
+        CurrentShape = _service.CurrentShape ?? TetrisHelper.GenerateRandomShape();
+    }
+
+    private void GenerateNewShape()
+    {
+        CurrentShape = TetrisHelper.GenerateRandomShape();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        jsModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/modules.js");
+        await jsModule.InvokeVoidAsync("enableCodeHighlight", null);
+    }
+
+
+}

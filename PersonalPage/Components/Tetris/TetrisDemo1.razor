@@ -1,0 +1,132 @@
+﻿@using PersonalPage.Data
+@using PersonalPage.Services.Tetris;
+@using PersonalPage.Services.Tetris.Demo1
+
+
+@inject IJSRuntime _jsRuntime
+@inject GameService _service
+
+<h3>Tetris game development - demo 1</h3>
+
+<div class="d-flex justify-content-evenly align-items-center mt-5">
+
+    <div class="board">
+
+        @for (int row = 0; row < _service.GameBoard.Height; row++)
+        {
+            for (int col = 0; col < _service.GameBoard.Width; col++)
+            {
+                //reassignement to captured local variable is required
+                int _row = row;
+                int _col = col;
+
+                <div class="pixel @(_service.GameBoard.Grid[_col, _row].IsOccupied ? "bg-yellow" : "")"
+                     data-row="@row"
+                     data-col="@col"
+                     @onclick="@(() => LogClickedPixel(_col, _row))">
+                </div>
+            }
+        }
+
+    </div>
+
+    <div class="logs">
+        <h5>Logs:</h5>
+        <ul>
+            @foreach (var log in logs.OrderByDescending(l => l.Item1).Take(20))
+            {
+                <li>@log.Item1 - @log.Item2</li>
+            }
+        </ul>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col">
+        <h4>Code</h4>
+        <hr />
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col">
+        <h5>Pixel.cs class</h5>
+        <pre>
+        <code>
+                @CodeSnippets.PixelClass()
+            </code>
+        </pre>
+        <ul>
+            <li>Pixel can be defined as Struct or Record</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col">
+        <h5>Board.cs class</h5>
+        <pre>
+        <code>
+                @CodeSnippets.BoardClass()
+            </code>
+        </pre>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col">
+        <h5>GameService.cs class</h5>
+        <pre>
+        <code>
+                @CodeSnippets.GameService()
+            </code>
+        </pre>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col">
+        <h5>Rendering the grid</h5>
+        <pre>
+        <code>
+                @CodeSnippets.RenderGrid()
+            </code>
+        </pre>
+        <ul>
+            <li><span>More on <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions#capture-of-outer-variables-and-variable-scope-in-lambda-expressions" target="_blank">Captured variables</a></span></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row mt-4 mb-4">
+    <div class="col">
+        <h5>Component code section</h5>
+        <pre>
+        <code>
+                @CodeSnippets.LogClickedPixel()
+            </code>
+        </pre>
+    </div>
+</div>
+
+@code
+{
+    private Stack<(DateTime, string)> logs = new();
+
+    private void LogClickedPixel(int col, int row)
+    {
+        _service.GameBoard.Grid[col, row].IsOccupied = true;
+
+        logs.Push((DateTime.Now, $"Clicked pixel {row} - {col}"));
+    }
+
+
+    private IJSObjectReference? jsModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        jsModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/modules.js");
+        await jsModule.InvokeVoidAsync("enableCodeHighlight", null);
+    }
+}

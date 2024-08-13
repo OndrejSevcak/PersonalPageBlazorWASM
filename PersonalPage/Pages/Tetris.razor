@@ -1,0 +1,38 @@
+﻿@page "/tetris"
+
+@using PersonalPage.Services.Tetris
+@using PersonalPage.Data
+@using PersonalPage.Components.Tetris;
+@using PersonalPage.Services.Tetris.Demo1
+
+@inject IJSRuntime _jsRuntime
+@inject GameService _service
+
+
+
+@if (demoToDisplay == "demo1")
+{
+    <TetrisDemo1 />
+}
+else if (demoToDisplay == "demo2")
+{
+    <TetrisDemo2 />
+}
+else
+{
+    <h3>Tetris game development</h3>
+    <ul>
+        <li class="pointer link-primary" @onclick="@(() => demoToDisplay = "demo1")">Part 1 - Create game classes and service, render a board grid, log which pixel has been clicked</li>
+        <li class="pointer link-primary" @onclick="@(() => demoToDisplay = "demo2")">Part 2 - Create Shape class, Tetris helper class, render a shape object on game board</li>
+    </ul>
+}
+
+
+
+@code
+{
+    string? demoToDisplay = null;
+
+
+
+}

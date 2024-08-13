@@ -1,0 +1,248 @@
+﻿@page "/Blog/BlazorSeries"
+
+
+<div class="container">
+    <div class="row mt-4">
+        <div class="col text-center">
+            <h3>Blazor Series Episode 1</h3>
+            <h5 class="fst-italic">Intro to WebAssembly, SignalR, Rendering, Hosting models and different types of Blazor project types in .NET 8</h5>
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-end">
+            <span>25.07.2024</span>
+        </div>
+    </div>
+
+    <article id="what-is-blazor">
+        <div class="row mt-4">
+            <div class="col">
+                <h5>What is Blazor</h5>
+                <p>
+                    Blazor is an open-source SPA(single-page) web framework for building full-stack applications created and maintained by Microsoft.
+                    <br /><br />
+                    What is interesting about Blazor is that <span class="badge bg-light text-dark fs-6">you can write your client code in C# and it will run in the browser</span>
+                    (either directly in browser using WebAssembly or the code will be executed on the server and UI will be updated in real-time using SignalR connection).
+                    <br /><br />
+                    Blazor also supports Server-Side rendering and can be used for creating static pages with no interactivity.
+                </p>
+                <p>More on what is Blazor <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-8.0">on Microsoft Learn</a></p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <h5>What is WebAssembly</h5>
+                <p>..as per the <a href="https://developer.mozilla.org/en-US/docs/WebAssembly">MDN docs</a>..</p>
+                <p class="fst-italic">
+                    "WebAssembly is a type of code that can be run in modern web browsers — it is a low-level assembly-like language with a compact binary format that
+                    runs with near-native performance and provides languages such as C/C++, C# and Rust with a compilation target so that they can run on the web. It is
+                    also designed to run alongside JavaScript, allowing both to work together."
+                </p>
+                <p>So WebAssembly enables us to:</p>
+                <ul>
+                    <li>run code of multiple languages in the browser (including C#)</li>
+                    <li>has near-native execution speed (faster than javascript)</li>
+                    <li>runs together with javascript (can be combined)</li>
+                    <li>is secure in that - WebAssembly is specified to be run in a safe, sandboxed execution environment</li>
+                    <li>is not secure in that - wasm code can be downloaded and decompiled, should not contain confidential information or code</li>
+                </ul>
+                <p><span class="badge bg-light text-dark fs-6">Blazor uses WebAssembly to run compiled C# code in the browser via .NET runtime, which is downloaded to the browser during initial page load.</span></p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <h5>What is SignalR</h5>
+                <p>..as per the <a href="https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-8.0">Microsoft Learn</a>..</p>
+                <p class="fst-italic">
+                    "ASP.NET Core SignalR is an open-source library that simplifies adding real-time web functionality to apps.
+                    Real-time web functionality enables server-side code to push content to clients instantly.
+                    SignalR provides an API for creating server-to-client remote procedure calls (RPC). The RPCs invoke functions on clients from server-side .NET Core code"
+                </p>
+                <p>So SingnalR enables us to:</p>
+                <ul>
+                    <li>send high frequency updates from the server to the client</li>
+                    <li>send messages to all connected clients simultaneously</li>
+                    <li>send messages to specific clients or groups of clients</li>
+                    <li>it handles connection management automatically</li>
+                    <li>supports WebSockets, Server-Sent events, Long Polling</li>
+                </ul>
+                <p><span class="badge bg-light text-dark fs-6">Blazor uses SignalR connection between server and client to execute C# on the server and send updates to the DOM on the client.</span></p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <h5>What is a RenderTree</h5>
+                <p><span class="badge bg-light text-dark fs-6">
+                    Blazor uses an abstraction layer between the DOM and the application code, called a RenderTree.
+                    It is a lightweight copy of the DOM's state composed by standard C# classes.</span>
+                </p>
+                <p>
+                    The RenderTree can be updated more efficiently than the DOM and reconciles multiple changes into a single DOM update. 
+                    To maximize effectiveness the RenderTree uses a diffing algorithm to to ensure it only updates the necessary elements in the browser’s DOM.
+                </p>
+                <p>
+                    The process of mapping a DOM into a RenderTree can be controlled with the key directive. Controlling this process may be necessary in certain scenarios that require the context of different DOM elements to be maintained when a DOM is updated.
+                </p>
+            </div>
+        </div>
+
+        <p class="my-4"><span class="badge bg-light text-dark fs-6">..now we know all the necessary pieces, that make Blazor a working web framework. Lets explore the different hosting models, we can choose from.</span></p>
+        <div class="row mt-4">
+            <div class="col">
+                <h5>Blazor Server</h5>
+                <p>
+                    Blazor Server uses SignalR to facilitate real-time communication between the client and server, allowing the execution of C# code on the server and
+                    updating the DOM on the client.
+                </p>
+                <p>How Blazor Server works:</p>
+                <ol>
+                    <li>
+                        <b>Initial page render</b>
+                        <ul>
+                            <li>When a user accesses a Blazor Server app, the server renders the initial HTML and sends it to the client (browser).</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>SignalR connection</b>
+                        <ul>
+                            <li>Once the initial HTML is loaded, Blazor establishes a SignalR connection between the client and the server.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>Component updates</b>
+                        <ul>
+                            <li>When an event (such as a button click) occurs on the client, the event is sent to the server over the SignalR connection.</li>
+                            <li>The server handles the event, executes the corresponding C# code, and determines the changes to the component's state</li>
+                            <li>The server then generates a diff (a minimal set of changes) to update the rendered component.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>DOM updates</b>
+                        <ul>
+                            <li>The diff is sent back to the client over the SignalR connection.</li>
+                            <li>The Blazor JavaScript runtime on the client applies these changes to the DOM, updating the user interface without a full page reload.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <img src="/img/blazor-server.png" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <h5>Blazor WebAssembly (WASM)</h5>
+                <p>
+                    is a client-side hosting model of Blazor, which allows you to run C# code directly in the browser using WebAssembly.
+                </p>
+                <p>How Blazor WebAssembly works:</p>
+                <ol>
+                    <li>
+                        <b>Initial load</b>
+                        <ul>
+                            <li>
+                                When a user accesses a Blazor WebAssembly application, the browser downloads a small bootstrapping HTML file, the Blazor WebAssembly runtime,
+                                the application DLLs, and the .NET runtime in WebAssembly format.
+                            </li>
+                            <li>The browser requests the initial HTML page.</li>
+                            <li>The HTML page includes a reference to the Blazor WebAssembly JavaScript file (blazor.webassembly.js).</li>
+                            <li>The blazor.webassembly.js script is executed, which loads the .NET runtime and application DLLs.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>WebAssembly execution</b>
+                        <ul>
+                            <li>The WebAssembly binary is executed by the browser’s JavaScript engine, which initializes the .NET runtime and loads the application assemblies.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>Running C# code</b>
+                        <ul>
+                            <li>The application’s C# code runs in the browser via the .NET runtime in WebAssembly.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>Rendering Components</b>
+                        <ul>
+                            <li>Blazor components are rendered using the WebAssembly runtime into the DOM.</li>
+                            <li>User interactions (such as clicks) trigger events that are handled by the Blazor WebAssembly runtime.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        <b>UI updates</b>
+                        <ul>
+                            <li>When a component’s state changes, the Blazor runtime generates a diff and updates the DOM accordingly.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <img src="/img/blazor-webassembly.png" />
+            </div>
+        </div>
+
+        <p class="my-4"><span class="badge bg-light text-dark fs-6">..so we are already familiar with the different hosting models, prior .NET 8 we had to choose between WASM and Blazor Server when creating a new project.</span></p>
+
+        <div class="row mt-4">
+            <div class="col">
+                <h5>Render modes in .NET 8</h5>
+                <p>
+                    Blazor in .NET 8 allows us to change the render mode for different components in the same application. <br />
+                    Now we can set a rendermode to one of the following options:
+                    <ul>
+                        <li><b>None</b> - only static render files, no interactivity</li>
+                        <li><b>WebAssembly</b> - interactivity via code running in WebAssembly</li>
+                        <li><b>Server</b> - interactivity via SignalR connection between Client and Server</li>
+                        <li><b>Auto</b> - ability to set Server or WebAssembly or both per component in single application</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-4">
+            <div class="col">
+                <h5>Project templates and render modes in .NET 8</h5>
+                <p>
+                    In .NET 8, we can create only two Blazor project types with following render modes options:
+                </p>
+                <table class="table table-sm w-50">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Template Name</th>
+                            <th>Interactivity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Blazor Web App</td>
+                            <td>Server</td>
+                        </tr>
+                        <tr>
+                            <td>Blazor Web App</td>
+                            <td>WebAssembly</td>
+                        </tr>
+                        <tr>
+                            <td>Blazor Web App</td>
+                            <td>Auto</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Blazor WebAssembly
+                                Standalone App
+                            </td>
+                            <td>WebAssembly by default (no render mode)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+    </article>
+    
+</div>
+
+
+
+
+@code {
+
+}
