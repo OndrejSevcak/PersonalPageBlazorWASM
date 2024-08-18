@@ -20,11 +20,26 @@ else if (demoToDisplay == "demo2")
 }
 else
 {
-    <h3>Tetris game development</h3>
-    <ul>
-        <li class="pointer link-primary" @onclick="@(() => demoToDisplay = "demo1")">Part 1 - Create game classes and service, render a board grid, log which pixel has been clicked</li>
-        <li class="pointer link-primary" @onclick="@(() => demoToDisplay = "demo2")">Part 2 - Create Shape class, Tetris helper class, render a shape object on game board</li>
-    </ul>
+    <div class="container mt-5">
+        <div class="row mt-4">
+            <div class="col">
+                <h5>Tetris game</h5>
+                <ul class="mt-4">
+                    <li class="pointer link-primary" @onclick="@(() => demoToDisplay = "demo1")">Part 1 - Create game classes and service, render a board grid, log which pixel has been clicked</li>
+                    <li class="pointer link-primary" @onclick="@(() => demoToDisplay = "demo2")">Part 2 - Create Shape class, Tetris helper class, render a shape object on game board</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <h5>Blog system</h5>
+                <ul class="mt-4">
+                    <li class="pointer link-primary">Blog system hosted at GitHub pages - How? (Comming soon..)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
 }
 
 

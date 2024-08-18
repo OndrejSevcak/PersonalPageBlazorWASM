@@ -1,0 +1,68 @@
+﻿@using PersonalPage.Models.Blog
+
+@inject IJSRuntime _jsRuntime
+
+<div class="container">
+
+    @foreach (var item in Elements)
+    {
+        <div class="row mt-2">
+            <div class="col">
+                @if (item.TagName == "h2")
+                {
+                    <h2 class="@item.Class">@item.Value</h2>
+                }
+                else if (item.TagName == "h4")
+                {
+                    <h4 class="@item.Class">@item.Value</h4>
+                }
+                else if (item.TagName == "b")
+                {
+                    <b class="@item.Class">@item.Value</b>
+                }
+                else if (item.TagName == "code")
+                {
+                    <pre>
+                    <code>
+                            @item.Value
+                        </code>
+                    </pre>
+                }
+                else if (item.TagName == "li")
+                {
+                    <ul>
+                        <li>@item.Value</li>
+                    </ul>
+                }
+                else if (item.TagName == "p")
+                {
+                    <p>@((MarkupString)item.Value)</p>
+                }
+                else if (item.TagName == "html")
+                {
+                    @((MarkupString)item.Value)
+                }
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public List<Element> Elements { get; set; }
+
+    private IJSObjectReference? jsModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        jsModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/modules.js");
+        await jsModule.InvokeVoidAsync("enableCodeHighlight", null);
+    }
+
+}

@@ -13,6 +13,7 @@ namespace Data.Models
         public string Title { get; set; }
         public string Category { get; set; }
         public List<Tag> Tags { get; set; }
-        public string Content { get; set; }
+
+        public List<Element> HtmlElements { get; set; }
     }
 }

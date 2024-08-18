@@ -364,5 +364,23 @@
             }
             ";
         }
+
+        public static string BootstrapCols()
+        {
+            return @"
+            <div class=""container"">
+                <div class=""row"">
+                    <div class=""col"">col</div>
+                    <div class=""col"">col</div>
+                    <div class=""col"">col</div>
+                </div>
+                <div class=""row"">
+                    <div class=""col-md"">col-sm</div>
+                    <div class=""col-md"">col-sm</div>
+                    <div class=""col-md"">col-sm</div>
+                </div>
+            </div>
+            ";
+        }
     }
 }

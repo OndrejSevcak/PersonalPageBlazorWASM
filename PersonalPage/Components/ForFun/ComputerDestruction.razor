@@ -1,0 +1,100 @@
+﻿@using PersonalPage.Components.Reusable
+
+<PageTitle>oh noooo!</PageTitle>
+
+<h1>Computer destruction @(progressValue < 100 ? "in progress..." : "DONE")</h1>
+
+<ProgressBar Value="progressValue" IsAnimated="true" ShowValue="true" LabelText="Progress of database deletion" />
+
+<div class="mt-4 d-flex justify-content-center align-items-center">
+    @if (displayNinja)
+    {
+        <div style="height:200px;">
+            <img src="img/ninja-coder.png" />
+        </div>
+
+    }
+    else
+    {
+        <div style="height:200px;">
+
+        </div>
+    }
+</div>
+
+<div class="mt-3">
+    @if (progressValue > 10)
+    {
+        <p>..deleting browser history</p>
+    }
+    @if (progressValue > 20)
+    {
+        <p>..deleting favourites...</p>
+    }
+    @if (progressValue > 30)
+    {
+        <p>..deleting paswords...</p>
+    }
+    @if (progressValue > 40)
+    {
+        <p>..deleting all social media accounts...</p>
+    }
+    @if (progressValue > 50)
+    {
+        <p>..deleting personal data...</p>
+    }
+    @if (progressValue > 60)
+    {
+        <p>..fomating hard-drive 10%...</p>
+    }
+    @if (progressValue > 70)
+    {
+        <p>..fomating hard-drive 30%...</p>
+    }
+    @if (progressValue > 80)
+    {
+        <p>..fomating hard-drive 50%...</p>
+    }
+    @if (progressValue > 90)
+    {
+        <p>..fomating hard-drive 75%...</p>
+    }
+    @if (progressValue >= 100)
+    {
+        <p>..fomating hard-drive 99.999999999999999999999999999999999999999999999999999999999999999999999999%...</p>
+    }
+</div>
+
+@if (displayFinalText)
+{
+    <div class="row mt-4">
+        <h1 class="text-danger">Gotcha! ur safe..</h1>
+    </div>
+}
+
+@code{
+
+    bool displayNinja = false;
+    bool displayFinalText = false;
+    int progressValue = 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            for (int i = 0; i < 105; i += 5)
+            {
+                progressValue = i;
+                displayNinja = !displayNinja;
+                await Task.Delay(400);
+                await InvokeAsync(StateHasChanged);
+            }
+
+            displayFinalText = true;
+            StateHasChanged();
+        }
+    }
+
+
+}
+

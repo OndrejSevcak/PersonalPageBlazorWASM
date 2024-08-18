@@ -1,0 +1,78 @@
+﻿@page "/blog/bootstrap"
+
+@using PersonalPage.Data
+
+<div class="row mt-2">
+    <div class="col text-center">
+        <h4>BootstrapLayouts</h4>
+    </div>
+</div>
+
+
+<h5 class="mt-2">Difference between col | col-sm | col-md | col-lg</h5>
+
+<div class="row mt-2 mb-2">
+    <div class="col">
+        <p>Lets have following code:</p>
+        <pre>
+        <code>
+                @CodeSnippets.BootstrapCols()
+            </code>
+        </pre>
+    </div>
+</div>
+
+
+<p>Which renders like this:</p>
+<div class="containere">
+    <div class="row cols-show">
+        <div class="col">col</div>
+        <div class="col">col</div>
+        <div class="col">col</div>
+    </div>
+    <div class="row cols-show">
+        <div class="col-md">col-md</div>
+        <div class="col-md">col-md</div>
+        <div class="col-md">col-md</div>
+    </div>
+</div>
+
+
+<ul class="mt-4">
+    <li>
+        Bootstrap by default aligns columns (col) in a single row with equal width.
+    </li>
+    <li>the first row will always have 3 columns when even for small screen sizes</li>
+    <li>the second row on the other hand will break the column into separate line at a particular with breakpoint</li>
+    <li>Try to resize the screen to a small one</li>
+</ul>
+
+
+<p>col-md-12 col-lg-6</p>
+
+<div class="row cols-show mb-2">
+    <div class="col-md-12 col-lg-6">col 1</div>
+    <div class="col-md-12 col-lg-6">col 2</div>
+</div>
+
+<p>col-md-12 col-lg-4</p>
+<div class="row mt-2 mb-4 cols-show">
+    <div class="col-md-12 col-lg-4">col 1</div>
+    <div class="col-md-12 col-lg-4">col 2</div>
+    <div class="col-md-12 col-lg-4">col 3</div>
+</div>
+
+
+<style type="text/css">
+
+    .cols-show div  {
+        background-color: aliceblue;
+        border: 2px solid dimgray;
+    }
+
+</style>
+
+
+@code {
+
+}
