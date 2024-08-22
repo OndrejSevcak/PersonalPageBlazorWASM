@@ -1,5 +1,9 @@
 ﻿@page "/blog"
 
+@using PersonalPage.Services.Blog
+@using PersonalPage.Models
+
+@inject IStorageService _storageAPI
 
 <div class="container mt-5">
 
@@ -32,10 +36,31 @@
         </ul>
     </div>
 
+    @if(posts != null)
+    {
+        <div class="row mt-4">
+            <div class="col">
+                <ul>
+                    @foreach (var item in posts)
+                    {
+                        <li>@item.Title</li>
+                    }
+                </ul>
+            </div>
+        </div>    
+    }
+
 </div>
 
 
 
-@code {
+@code { 
+
+    List<BlogPost>? posts = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await _storageAPI.LoadBlogPostsFromGitHubStorage();
+    }
 
 }

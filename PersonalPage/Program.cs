@@ -17,7 +17,10 @@ builder.Services.AddScoped<GameService>();
 //options pattern
 builder.Services.AddOptions<StorageSettings>().Configure(options =>
 {
-    options.DataPath = "JsonStorage";
+    options.GitHubUserName = "OndrejSevcak";
+    options.RepositoryName = "BlazorBlogStorage";
+    options.GitHubApiBaseUrl = "https://api.github.com/";
+    options.DataPath = "BlogStorage";
     options.PostsFolder = "Posts";
     options.CategoriesFolder = "Categories";
 });
