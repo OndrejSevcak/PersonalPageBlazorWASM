@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using PersonalPage;
-using PersonalPage.Services.Blog;
+using PersonalPage.Models;
+using PersonalPage.Services;
 using PersonalPage.Services.Tetris.Demo1;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -13,19 +14,19 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 //custom services
 builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<GitHubService>();
+builder.Services.AddScoped<BlogService>();
+
 
 //options pattern
 builder.Services.AddOptions<StorageSettings>().Configure(options =>
 {
     options.GitHubUserName = "OndrejSevcak";
     options.RepositoryName = "BlazorBlogStorage";
-    options.GitHubApiBaseUrl = "https://api.github.com/";
-    options.DataPath = "BlogStorage";
-    options.PostsFolder = "Posts";
-    options.CategoriesFolder = "Categories";
+    options.GitHubApiBaseUrl = "https://api.github.com";
+    options.DataPath = "Posts";
 });
 
-builder.Services.AddScoped<IStorageService, StorageService>();
 
 //Auth0 OIDC authentication
 builder.Services.AddOidcAuthentication(options =>

@@ -1,9 +1,9 @@
 ﻿@page "/blog"
 
-@using PersonalPage.Services.Blog
 @using PersonalPage.Models
+@using PersonalPage.Services
 
-@inject IStorageService _storageAPI
+@inject BlogService _blogService
 
 <div class="container mt-5">
 
@@ -26,8 +26,6 @@
         </div>
     </div>
 
-
-
     <div class="mt-4">
         <h5>My recent .NET bookmarks..</h5>
         <ul>
@@ -36,31 +34,27 @@
         </ul>
     </div>
 
-    @if(posts != null)
+    @if(posts != null && posts.Count > 0)
     {
-        <div class="row mt-4">
-            <div class="col">
-                <ul>
-                    @foreach (var item in posts)
-                    {
-                        <li>@item.Title</li>
-                    }
-                </ul>
-            </div>
-        </div>    
+        <ul>
+            @foreach(var post in posts)
+            {
+            <li>@post.Title</li>
+            }
+        </ul>        
     }
 
 </div>
 
 
 
-@code { 
-
-    List<BlogPost>? posts = null;
+@code {
+    List<BlogPost> posts = new List<BlogPost>();
 
     protected override async Task OnInitializedAsync()
     {
-        posts = await _storageAPI.LoadBlogPostsFromGitHubStorage();
+        posts = await _blogService.GetPostsAsync("Posts/BlazorSeries");
     }
+
 
 }
